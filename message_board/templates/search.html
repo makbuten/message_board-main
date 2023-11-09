@@ -1,0 +1,55 @@
+<!--  наследуемся от шаблона default.html, который мы создавали для flatpages -->
+{% extends 'flatpages/default.html' %}
+
+
+<!-- Название у нас будет products -->
+{% block title %}
+Поиск по публикациям
+{% endblock title %}
+
+{% block content %}
+<h1>Поиск по откликам:</h1>
+<hr>
+   <form action="" method="get">
+       {# Переменная, которую мы передали через контекст, может сгенерировать нам форму с полями #}
+       {{ filterset.form.as_p }}
+       {# Добавим кнопку отправки данных формы #}
+       <input type="submit" value="Найти" />
+   </form>
+
+   {% if responses %}
+       <table>
+           <tr>
+               <td>Дата публикации</td>
+               <td>Текст</td>
+               <td>Автор</td>
+               <td>На объявление</td>
+               <td>Статус</td>
+               <td> </td>
+           </tr>
+           {% for response in responses %}
+           <tr>
+               <td>{{ response.response_creation_time }}</td>
+               <td>{{ response.response_text }}</td>
+               <td>{{ response.response_author.nickname }}</td>
+                <td>{{ response.response_post }}</td>
+               {% if response.response_accepted %}
+                   <td>Принято</td>
+                   {% else %}
+                   <td><a class="nav-link" href="/posts/response/{{ response.id }}/accept" > Принять </a></td>
+                   {% endif %}
+               <td><a class="nav-link" href="/posts/response/{{ response.id }}/delete" > Удалить </a></td>
+           </tr>
+           {% endfor %}
+
+       </table>
+   {% else %}
+       <h2>Ничего не найдено</h2>
+   {% endif %}
+
+   <hr>
+   <h3>Найдено откликов на портале: {{ responses.all.count }} </h3>
+{% endblock content %}
+
+{% block extra_body %}
+{% endblock extra_body %}

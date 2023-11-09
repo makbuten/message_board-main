@@ -1,0 +1,40 @@
+{% extends 'flatpages/default.html' %}
+
+
+{% block title %}
+{{post.header }}
+{% endblock title %}
+
+{% block content %}
+{{ form.media }}
+{{post.post_header }}
+<hr>
+{{ post.post_text|safe }}
+<hr>
+<small><p> {{ post.post_author.nickname }} </p>
+    <p>{{ post.get_post_category_display }}</p>
+
+       {{ post.post_creation_time }}</small>
+
+<a class="nav-link" href="/posts/{{ post.id }}/edit" > Редактировать </a>
+<a class="nav-link" href="/posts/{{ post.id }}/delete" > Удалить </a>
+{% endblock content %}
+
+{% block extra_body %}
+
+<h2>  Отклики:  </h2>
+     {% if user.is_authenticated %}
+      <form action="" method="POST" id="main_form" class="comment_form">
+         <div>
+             <label="white" for="response">Введите текст отклика </label>
+            {{ response_form.response_text }} {% csrf_token %} <input type="submit" value="Post">
+         </div>
+      </form>
+      {% else %} <h4>Чтобы, оставлять отклики вам нужно зарегистрироваться</h4>
+      {% endif %}
+
+      {% for response in responses %}
+         <h6> <b>{{ response.response_author.nickname }} : </b> {{ response.response_text }}</h6>
+      {% endfor %}
+
+{% endblock extra_body %}
